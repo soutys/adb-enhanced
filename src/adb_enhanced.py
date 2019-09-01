@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # Python 2 and 3, print compatibility
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 # Without this urllib.parse which is python 3 only cannot be accessed in python 2.
 from future.standard_library import install_aliases
 install_aliases()
@@ -23,7 +23,7 @@ from urllib.parse import urlparse
 # asyncio was introduced in version 3.5
 if sys.version_info >= (3, 5):
     try:
-        import asyncio_helper
+        import .asyncio_helper
         _ASYNCIO_AVAILABLE = True
     except ImportError:
         # This is to deal with python versions below 3.5
