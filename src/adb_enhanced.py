@@ -960,13 +960,11 @@ def _is_debug_package(app_name):
     pm_cmd = 'dumpsys package %s' % app_name
     grep_cmd = '(grep -c -E \'%s\' || true)' % _REGEX_DEBUGGABLE
     app_info_dump = execute_adb_shell_command(pm_cmd, piped_into_cmd=grep_cmd)
-    if app_info_dump is None or app_info_dump.strip() == '0':
-        return app_name, False
-    elif app_info_dump.strip() == '1' or app_info_dump.strip() == '2':
-        return app_name, True
-    else:
+    if app_info_dump is None or not app_info_dump.strip().isnumeric():
         print_error_and_exit('Unexpected output for %s | %s = %s' % (pm_cmd, grep_cmd, app_info_dump))
         return None, False
+
+    return app_name, int(app_info_dump.strip()) > 0
 
 
 def list_allow_backup_apps():
@@ -1007,13 +1005,11 @@ def _is_allow_backup_package(app_name):
     pm_cmd = 'dumpsys package %s' % app_name
     grep_cmd = '(grep -c -E \'%s\' || true)' % _REGEX_BACKUP_ALLOWED
     app_info_dump = execute_adb_shell_command(pm_cmd, piped_into_cmd=grep_cmd)
-    if app_info_dump is None or app_info_dump.strip() == '0':
-        return app_name, False
-    elif app_info_dump.strip() == '1' or app_info_dump.strip() == '2':
-        return app_name, True
-    else:
+    if app_info_dump is None or not app_info_dump.strip().isnumeric():
         print_error_and_exit('Unexpected output for %s | %s = %s' % (pm_cmd, grep_cmd, app_info_dump))
         return None, False
+
+    return app_name, int(app_info_dump.strip()) > 0
 
 
 # Source: https://developer.android.com/reference/android/app/usage/UsageStatsManager#STANDBY_BUCKET_ACTIVE
